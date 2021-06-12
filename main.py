@@ -165,7 +165,7 @@ def add_users():
     User_name.pack(pady=2)
     Button(frame1, text='Clear', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
            command=lambda: None).pack(side=TOP, pady=2)
-    footer(new_window, 'Contact us | © Copyright by your name or company name')
+    footer(new_window, 'Contact us | Copyright by your name or company name')
     r=''#test_fing.AddUser()
     if len(r)>1:
         User_id.insert(0, r[1])
