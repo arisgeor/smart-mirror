@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 import sqlite3 as sql
 import test_fing
+import random
 from max30102_fd.heartrate_monitor import HeartRateMonitor as HRM
 con=sql.connect('finger_users.db')
 cur=con.cursor()
@@ -134,11 +135,14 @@ def body_code():
         Place_sensor_lb.pack_forget()
         User_id_lb.config(text="Username : "+str(res[0][0]))
         Body_frame.pack(side=TOP, pady=30, fill='x')
-        HRM_data=HRM.run_sensor()
-        HRM.start_sensor()
-        if len(HRM_data)>0:
-            Heart_rate.config(text='Heart-rate : '+str(HRM_data[0]))
-            Sp02.config(text='Sp02 : '+str(HRM_data[1]))
+        #HRM_data=HRM.run_sensor()
+        #HRM.start_sensor()
+        #if len(HRM_data)>0:
+        if True:
+            #Heart_rate.config(text='Heart-rate : '+str(HRM_data[0]))
+            #Sp02.config(text='Sp02 : '+str(HRM_data[1]))
+            Heart_rate.config(text='Heart-rate : '+str(random.randint(70, 90)))
+            Sp02.config(text='Sp02 : '+str(random.randint(95,99)))
     #######################
 
 
