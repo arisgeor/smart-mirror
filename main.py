@@ -100,7 +100,7 @@ Button(main_frame, text='Power Off', font=(font_name, 12, 'bold'), width=15, bg=
 Button(main_frame, text='Window maximize', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
        command=lambda: window.attributes('-fullscreen', True)).pack(side=TOP, pady=10)
 
-footer(window, 'Contact us | © Copyright arisgeor@ece.auth.gr')
+footer(window, 'Contact us | Copyright arisgeor@ece.auth.gr')
 Body_frame = Frame(window, bg=bgcolor)
 
 User_frame = Frame(Body_frame, bg=bgcolor)
