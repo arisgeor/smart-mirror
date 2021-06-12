@@ -24,15 +24,13 @@ window.bind('<Escape>', toggle_window)
 window.title("Title")                       # Title
 window.config(background=bgcolor)           # Applying background color in window
 
-home_page_title = "Title"
-home_page_heading = " Sologon if you have any"
+home_page_title = "Smart-Mirror"
+home_page_heading = "Measure yourself"
 
 
 def back():
     main_frame.pack(pady=30)
     Body_frame.pack_forget()
-
-
 
 
 def menu_bar(window_name):
@@ -83,6 +81,7 @@ def footer(window_name, footer_text):
 ##################################
 ########## Main Window #########
 #################################
+
 menu_bar(window)
 Header_part(window, home_page_title, home_page_heading)
 main_frame = Frame(window, bg=bgcolor)
@@ -148,7 +147,7 @@ def body_code():
 
 def add_users():
     new_window = Toplevel()
-    new_window.title("New Users")  # Title
+    new_window.title("New User")  # Title
     new_window.config(background=bgcolor)  # Applying background color in window
     new_window.geometry('500x400+450+100')
     Label(new_window, text='Place your finger on the scanner after that press start.....')
