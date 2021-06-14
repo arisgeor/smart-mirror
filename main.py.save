@@ -5,7 +5,7 @@ import sqlite3 as sql
 import test_fing
 import random
 #from max30102_fd.heartrate_monitor import HeartRateMonitor as HRM
-con=sql.connect('\home\pi\smart-mirror\finger_users.db')
+con=sql.connect('finger_users.db')
 cur=con.cursor()
 cur.execute("Create Table IF NOT EXISTS Users (User_id number primary key, E_Date Date);");
 
@@ -19,7 +19,7 @@ bg_color1 = 'Black'
 text_color = 'white'                        # text colors
 font_name = 'Time New Roman'                # font name
 window = Tk()                               # Window variable
-#window.attributes("-fullscreen", True)
+window.attributes("-fullscreen", True)
 window.bind('<Escape>', toggle_window)
 # Window Size
 window.title("Title")                       # Title
@@ -93,8 +93,8 @@ Button(main_frame, text='Home', font=(font_name, 12, 'bold'), width=15, bg='gray
        command=lambda: body_code()).pack(side=TOP, pady=10)
 Button(main_frame, text='Add User', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
        command=lambda: add_users()).pack(side=TOP, pady=10)
-Button(main_frame, text='Delete users', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
-       command=lambda: Del_all_user()).pack(side=TOP, pady=10)
+Button(main_frame, text='Restart', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
+       command=lambda: None).pack(side=TOP, pady=10)
 Button(main_frame, text='Power Off', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
        command=lambda: None).pack(side=TOP, pady=10)
 Button(main_frame, text='Window maximize', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
@@ -129,9 +129,9 @@ def body_code():
     Place_sensor_lb=Label(window, text='Place your finger on the sensor.....', bg=bgcolor, fg=text_color, font=(font_name,45))
     Place_sensor_lb.pack(side=TOP)
     r=test_fing.VerifyUser()
-    print(r)
     cur.execute('Select * from Users where user_id=?',(r,))
     res=cur.fetchall()
+    
     if len(res)>0:
         Place_sensor_lb.pack_forget()
         User_id_lb.config(text="Username : "+str(res[0][0]))
@@ -169,6 +169,8 @@ def add_users():
     footer(new_window, 'Contact us | Copyright by your name or company name')
     r=test_fing.AddUser()
     print('The id is =>  ', r[1])
+    con=sql.connect('finger_users.db')
+    cur=con.cursor()
     cur.execute('select * from users where user_id=?;',(r[1],))
     res=cur.fetchall()
     if len(res)>0:
@@ -176,17 +178,13 @@ def add_users():
     else:
     	User_id.insert(0,r[1])
         from datetime import datetime
+        con = sql.connect('finger_users.db')
+        cur = con.cursor()
         today = datetime.now().strftime('%Y-%m-%d')
-        cur.execute("insert into users (user_id, E_date) Values (?,?);",(r[1], today))
-        new_window.destroy()
-        tkMessageBox.showinfo("Success", "User Added Successfully user id = "+ str(r[1]))
+        cur.execute("insert into Users Values (?,?);", (r[1], today))
+        tkMessageBox.showinfo("Success", "User Added Successfully")
         con.commit()
-	
-def Del_all_user():
-    test_fing.ClearAllUser()
-    cnt_user=test_fing.GetUserCount()
-    cur.execute('Delete from users;')
-    con.commit();
-    tkMessageBox.showinfo('info','Successfully deleted remaining users = '+ str(cnt_user))
+    else:
+        Label(new_window, text=r, font=(font_name, 12, 'bold'), bg=bgcolor, fg='red').pack(side=BOTTOM, fill='x')
 
 window.mainloop()

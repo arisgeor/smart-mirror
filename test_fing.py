@@ -182,25 +182,34 @@ def AddUser():
 
     r = GetUserCount()
     if r >= USER_MAX_CNT:
-        return ACK_FULL	
+        return ACK_FULL,-3
         
     command_buf = [CMD_ADD_1, 0, r+1, 3, 0]
     print(g_rx_buf)
-    r = TxAndRxCmd(command_buf, 8, 6)
-    if r == ACK_TIMEOUT:
-        return ACK_TIMEOUT
-    if r == ACK_SUCCESS and g_rx_buf[4] == ACK_SUCCESS:
-        command_buf[0] = CMD_ADD_3
-        r = TxAndRxCmd(command_buf, 8, 6)
-        print(g_rx_buf)
+    user_id = g_rx_buf[3]
+    while True:
+    	r = TxAndRxCmd(command_buf, 8, 15)
+	if r == ACK_TIMEOUT:
+	    print('Time out')
+       	    return ACK_TIMEOUT, -1
+	if r == ACK_SUCCESS and g_rx_buf[4] == ACK_SUCCESS:
+	    command_buf[0] = CMD_ADD_3
+            r = TxAndRxCmd(command_buf, 8, 6)
+            print(g_rx_buf)
         if r == ACK_TIMEOUT:
-            return ACK_TIMEOUT
+            print('time_out again')
+            return ACK_TIMEOUT, -11
         if r == ACK_SUCCESS and g_rx_buf[4] == ACK_SUCCESS:
-            return ACK_SUCCESS,g_rx_buf[3]
+	    print('success')
+            return ACK_SUCCESS, user_id
+            
         else:
-            return ACK_FAIL 
+            print('Fial')
+            return ACK_FAIL ,-2
+            
     else:
-        return ACK_FAIL
+        print('no_runce the code')
+        return ACK_FAIL,-22
 
 
 #***************************************************************************
@@ -237,7 +246,7 @@ def VerifyUser():
     if r == ACK_TIMEOUT:
         return ACK_TIMEOUT
     if r == ACK_SUCCESS and IsMasterUser(g_rx_buf[4]) == TRUE:
-        return g_rx_buf[3] ###########################################################################################
+        return g_rx_buf[3]-1 ###########################################################################################
     elif g_rx_buf[4] == ACK_NO_USER:
         return ACK_NO_USER
     elif g_rx_buf[4] == ACK_TIMEOUT:

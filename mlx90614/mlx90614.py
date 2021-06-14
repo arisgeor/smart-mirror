@@ -1,4 +1,4 @@
-#import smbus
+import smbus
 from time import sleep
 
 class MLX90614():
