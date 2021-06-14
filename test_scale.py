@@ -15,8 +15,8 @@ def connect_scale():
     
 def get_scale(BTSerial, threshold):
     try:
-	RXData = (BTSerial.readline()).strip().decode("utf-8")
-	if float(RXData)>threshold:
+        RXData = (BTSerial.readline()).strip().decode("utf-8")
+        if float(RXData)>threshold:
            print (RXData)
            return RXData
     except KeyboardInterrupt:

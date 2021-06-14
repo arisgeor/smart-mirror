@@ -9,11 +9,8 @@ def get_temp():
     print("Reading Temperature: ")
 
     try:
-	obj_temp = mlx90614.get_obj_temp()
+        obj_temp = mlx90614.get_obj_temp()
         print("Object temp is {:.2f}\n".format(obj_temp))
-          # time.sleep(sleep_time)
-	return obj_temp
+        return obj_temp
     except KeyboardInterrupt:
     	pass
-
-
