@@ -5,9 +5,8 @@ import sqlite3 as sql
 import test_fing
 import random
 import test_scale as Scale
-from mlx90614.get_temp import get_temp
-#from max30102_fd.heart_main import heart_sensor
-from max30102_fd.heart_main import heart_sensor as HRM
+from get_temp import get_temp
+#from max30102_fd.heartrate_monitor import HeartRateMonitor as HRM
 con=sql.connect('finger_users.db')
 cur=con.cursor()
 cur.execute("Create Table IF NOT EXISTS Users (User_id number primary key, E_Date Date);");
@@ -137,6 +136,7 @@ def body_code():
     main_frame.pack_forget()
     import time
     Place_sensor_lb=Label(window, text='Place your finger on the sensor.....', bg=bgcolor, fg=text_color, font=(font_name,45))
+    Place_sensor_lb.pack(side=TOP)
     
     r=test_fing.VerifyUser()
     print(r)
@@ -144,16 +144,14 @@ def body_code():
     res=cur.fetchall()
     if len(res)>0:
         Place_sensor_lb.pack_forget()
+        User_id_lb.config(text="Username : "+str(res[0][0]))
         Body_frame.pack(side=TOP, pady=30, fill='x')
         #HRM_data=HRM.run_sensor()
+        
         #HRM.start_sensor()
 
         #if len(HRM_data)>0:
         if True:
-            tkMessageBox.showinfo('Info',"Place you finger on heart scanner.... /nand press ok...")
-            HRM_data=HRM()
-            Heart_rate.config(text='Heart-rate : '+str(HRM_data[0]))
-            Sp02.config(text='Sp02 : '+str(HRM_data[1]))
             show_values_of_sensors()
             #after_v=window.after(1000, show_values_of_sensors)
             
@@ -171,8 +169,12 @@ def body_code():
     # #
 def show_values_of_sensors():
     global after_v
+    #HRM_data=HRM.run_sensor()
+    #HRM.start_sensor()
     Temp_value=get_temp()
     Scale_value=Scale.get_scale(Btserial_Scale, 5.0)
+    #Heart_rate.config(text='Heart-rate : '+str(HRM_data[0]))
+    #Sp02.config(text='Sp02 : '+str(HRM_data[1]))
     Temp.config(text='Temp : '+str(Temp_value) + ' C')
     Weight.config(text='Weight : '+str(Scale_value) + ' Kg')
     after_v=window.after(1000, show_values_of_sensors)

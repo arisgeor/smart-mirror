@@ -1,6 +1,6 @@
 
-from max30102_fd.max30102 import MAX30102
-from max30102_fd import hrcalc
+from max30102 import MAX30102
+import hrcalc
 import threading
 import time
 import numpy as np
@@ -27,7 +27,7 @@ class HeartRateMonitor(object):
         bpms = []
 
         # run until told to stop
-        while not self._thread.stopped:
+        while 1: # not self._thread.stopped:
             # check if any data is available
             num_bytes = sensor.get_data_present()
             if num_bytes > 0:
