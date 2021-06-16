@@ -22,3 +22,8 @@ def get_scale(BTSerial, threshold):
     except KeyboardInterrupt:
         print('keyboard interrupt detected, exititng...')
         exit()
+
+#used for testing
+#a = connect_scale()
+#while 1:
+#    get_scale(a, 5)

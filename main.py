@@ -70,7 +70,7 @@ def Header_part(window_name, Title, Heading):
     today_date = datetime.now().strftime('%d-%m-%Y (%A)')
     logo_label = Label(logo_frame, text=today_date, bg=bgcolor, fg=text_color, font=(font_name, 28, 'bold', 'italic'))
     logo_label.pack(side=RIGHT, anchor=NE, padx=5)
-    Canvas(window_name, height=10, bg='Red').pack(fill='x')
+    Canvas(window_name, height=2, bg='Red').pack(fill='x')
 
 
 def footer(window_name, footer_text):
@@ -79,7 +79,7 @@ def footer(window_name, footer_text):
 
     Label(window_name, text=footer_text, font=(font_name, 12), justify=LEFT, bg=bgcolor, fg=text_color).pack(
         side=BOTTOM, anchor=NE, padx=30)
-    Canvas(window_name, height=10, bg='Blue').pack(side=BOTTOM, fill='x', pady=5)
+    Canvas(window_name, height=2, bg='Blue').pack(side=BOTTOM, fill='x', pady=5)
 
 
 #*********************************************************************************
@@ -90,17 +90,17 @@ menu_bar(window)
 Header_part(window, home_page_title, home_page_heading)
 main_frame = Frame(window, bg=bgcolor)          #Create the "HOME" main_frame.
 main_frame.pack(pady=30)                        #place it.
-Label(main_frame, text='HOME', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor, pady=20,
-      fg=text_color).pack(side=TOP, pady=10)
-Button(main_frame, text='Login', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
+#Label(main_frame, text='HOME', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor, pady=20,
+#      fg=text_color).pack(side=TOP, pady=10)
+Button(main_frame, text='Login', font=(font_name, 12, 'bold'), width=15, bg='black', fg=text_color, bd=3,
        command=lambda: body_code()).pack(side=TOP, pady=10)
-Button(main_frame, text='Add User', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
+Button(main_frame, text='Add User', font=(font_name, 12, 'bold'), width=15, bg='black', fg=text_color, bd=3,
        command=lambda: add_users()).pack(side=TOP, pady=10)
-Button(main_frame, text='Delete All Users', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
+Button(main_frame, text='Delete All Users', font=(font_name, 12, 'bold'), width=15, bg='black', fg=text_color, bd=3,
        command=lambda: Del_all_user()).pack(side=TOP, pady=10)
-Button(main_frame, text='Power Off', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
+Button(main_frame, text='Power Off', font=(font_name, 12, 'bold'), width=15, bg='black', fg=text_color, bd=3,
        command=lambda: window.quit()).pack(side=TOP, pady=10)
-Button(main_frame, text='Window maximize', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
+Button(main_frame, text='Window maximize', font=(font_name, 12, 'bold'), width=15, bg='black', fg=text_color, bd=3,
        command=lambda: window.attributes('-fullscreen', True)).pack(side=TOP, pady=10)
 
 footer(window, 'Contact me: arisgeor@ece.auth.gr')
@@ -115,7 +115,7 @@ Text_frame = Frame(Body_frame, bg=bgcolor)      #Text_frame is created within Bo
 Text_frame.pack(side=RIGHT, padx=100)
 
 #Inside User_frame:
-User_id_lb=Label(User_frame, text='UserId: User_1', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor,
+User_id_lb=Label(User_frame, text='User Id: User_1', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor,
       fg=text_color)
 User_id_lb.pack(side=TOP, pady=10)
 Button(User_frame, text='Home', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
