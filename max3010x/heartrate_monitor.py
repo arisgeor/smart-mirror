@@ -1,5 +1,5 @@
 
-from max30102 import MAX30102
+from max3010x import MAX3010X
 import hrcalc
 import threading
 import time
@@ -8,7 +8,7 @@ import numpy as np
 
 class HeartRateMonitor(object):
     """
-    A class that encapsulates the max30102 device into a thread
+    A class that encapsulates the max30102-05 device into a thread
     """
 
     LOOP_TIME = 0.01
@@ -21,7 +21,7 @@ class HeartRateMonitor(object):
         self.print_result = print_result
 
     def run_sensor(self):
-        sensor = MAX30102()
+        sensor = MAX3010X()
         ir_data = []
         red_data = []
         bpms = []

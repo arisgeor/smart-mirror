@@ -4,7 +4,7 @@ import sqlite3 as sql
 import test_fing
 import test_scale as Scale
 from mlx90614.get_temp import get_temp
-from max30102_fd.heart_main import heart_sensor as HRM
+from max3010x.heart_main import heart_sensor as HRM
 
 con=sql.connect('finger_users.db')
 cur=con.cursor()
@@ -165,7 +165,7 @@ def show_values_of_sensors():
 
     global after_v
     Temp_value=get_temp()
-    Scale_value=Scale.get_scale(Btserial_Scale, 5.0)
+    Scale_value=Scale.get_scale(Btserial_Scale, 5.0)            #Get scale Value and set weigth Threshhold.
     Temp.config(text='Temp : '+str(Temp_value) + ' C')          #Update Temperature value.
     Weight.config(text='Weight : '+str(Scale_value) + ' Kg')    #Update Weight value.
     after_v = window.after(1000, show_values_of_sensors)        #Each second call "show_values_of_sensors" again.
