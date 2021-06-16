@@ -5,6 +5,7 @@ import test_fing
 import test_scale as Scale
 from mlx90614.get_temp import get_temp
 from max30102_fd.heart_main import heart_sensor as HRM
+
 con=sql.connect('finger_users.db')
 cur=con.cursor()
 cur.execute("Create Table IF NOT EXISTS Users (User_id number primary key, E_Date Date);");
@@ -17,15 +18,14 @@ bgcolor = 'Black'
 bg_color1 = 'Black'
 text_color = 'white'                        # text colors
 font_name = 'Time New Roman'                # font name
-window = Tk()                               # Window variable
-#window.attributes("-fullscreen", True)
-window.bind('<Escape>', toggle_window)
-# Window Size
+
+window = Tk()                               # Window variable that holds the App. 
 window.title("Title")                       # Title
-window.config(background=bgcolor)           # Applying background color in window
+window.config(background=bgcolor)           # Applying background color in window.
+window.bind('<Escape>', toggle_window)      # Use the Escape Button to exit Fullscreen Mode.
 
 home_page_title = "Smart-Mirror"
-home_page_heading = "Measure yourself"
+home_page_heading = "Biometric Measuring Device"
 
 global after_v
 def back():
@@ -33,21 +33,21 @@ def back():
     main_frame.pack(pady=30)
     print(after_v)
     window.after_cancel(after_v)
-    print('cancle')
+    print('Cancel')
     Body_frame.pack_forget()
 
 
 def menu_bar(window_name):
     
-    ''' Menu Bar of the Application '''
+    ''' Menu Bar of the Application (Top Left)'''
 
     my_menu = Menu(window_name)
     window_name.config(menu=my_menu)
     window_menu = Menu(my_menu)
     my_menu.add_cascade(label="Window", menu=window_menu)
-    window_menu.add_command(label="Maximized", command=lambda: window.attributes('-fullscreen', True))
+    window_menu.add_command(label="Maximize", command=lambda: window.attributes('-fullscreen', True))
     window_menu.add_separator()
-    window_menu.add_command(label="For Minimized Press Esc key", command=lambda: tkMessageBox.showinfo('Info', "Press Ecs Key for minimize"))
+    window_menu.add_command(label="Press Esc Key to Minimize", command=lambda: tkMessageBox.showinfo('Info', "Press Esc Key to Minimize"))
     window_menu.add_separator()
     window_menu.add_command(label="Back", command=lambda: back())
     window_menu.add_separator()
@@ -88,59 +88,65 @@ def footer(window_name, footer_text):
 
 menu_bar(window)
 Header_part(window, home_page_title, home_page_heading)
-main_frame = Frame(window, bg=bgcolor)
-main_frame.pack(pady=30)
-Label(main_frame, text='MENU', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor, pady=20,
+main_frame = Frame(window, bg=bgcolor)          #Create the "HOME" main_frame.
+main_frame.pack(pady=30)                        #place it.
+Label(main_frame, text='HOME', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor, pady=20,
       fg=text_color).pack(side=TOP, pady=10)
 Button(main_frame, text='Login', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
        command=lambda: body_code()).pack(side=TOP, pady=10)
 Button(main_frame, text='Add User', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
        command=lambda: add_users()).pack(side=TOP, pady=10)
-Button(main_frame, text='Delete users', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
+Button(main_frame, text='Delete All Users', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
        command=lambda: Del_all_user()).pack(side=TOP, pady=10)
 Button(main_frame, text='Power Off', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
        command=lambda: window.quit()).pack(side=TOP, pady=10)
 Button(main_frame, text='Window maximize', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
        command=lambda: window.attributes('-fullscreen', True)).pack(side=TOP, pady=10)
 
-footer(window, 'Contact us | Copyright arisgeor@ece.auth.gr')
-Body_frame = Frame(window, bg=bgcolor)
+footer(window, 'Contact me: arisgeor@ece.auth.gr')
 
-User_frame = Frame(Body_frame, bg=bgcolor)
+#For when user logs in: 
+Body_frame = Frame(window, bg=bgcolor)          #Body_frame is created within window but not placed yet.
+                                                #It will be placed when the user successfuly logs in.
+User_frame = Frame(Body_frame, bg=bgcolor)      #User_frame is created within Body_frame
 User_frame.pack(side=LEFT, padx=30)
-Text_frame = Frame(Body_frame, bg=bgcolor)
+
+Text_frame = Frame(Body_frame, bg=bgcolor)      #Text_frame is created within Body_Frame
 Text_frame.pack(side=RIGHT, padx=100)
+
+#Inside User_frame:
 User_id_lb=Label(User_frame, text='UserId: User_1', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor,
       fg=text_color)
 User_id_lb.pack(side=TOP, pady=10)
 Button(User_frame, text='Home', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
        command=lambda: back()).pack(side=TOP, pady=10)
 
-Label(Text_frame, text='Data Analysis', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor,
+#Inside Text_frame:
+Label(Text_frame, text='Current Biometrics:', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor,
       fg=text_color).pack(side=TOP, pady=10)
-
 Heart_rate = Label(Text_frame, text='Heart-rate : 000', font=(font_name, 20), justify=LEFT, bg=bgcolor, fg=text_color)
 Heart_rate.pack(side=TOP, pady=10)
 Sp02 = Label(Text_frame, text='Sp02 : 0000', font=(font_name, 20), justify=LEFT, bg=bgcolor, fg=text_color)
 Sp02.pack(side=TOP, pady=10)
 Temp = Label(Text_frame, text='Temp : 00 C', font=(font_name, 20), justify=LEFT, bg=bgcolor, fg=text_color)
 Temp.pack(side=TOP, pady=10)
-Weight = Label(Text_frame, text='Weight : 00 KG', font=(font_name, 20), justify=LEFT, bg=bgcolor, fg=text_color)
+Weight = Label(Text_frame, text='Weight : 00 Kg', font=(font_name, 20), justify=LEFT, bg=bgcolor, fg=text_color)
 Weight.pack(side=TOP, pady=10)
-Btserial_Scale=Scale.connect_scale()
+Btserial_Scale=Scale.connect_scale()                    #Connect the scale. 
 
 def body_code():
-    main_frame.pack_forget()
-    import time
+
+    ''' App Screen After User Clicks the "Log In" Button '''
+
+    main_frame.pack_forget()                            #Hide the "Home Screen" and pop up the message below.
     Place_sensor_lb=Label(window, text='Place your finger on the sensor.....', bg=bgcolor, fg=text_color, font=(font_name,45))
-    
     r=test_fing.VerifyUser()
     print(r)
     cur.execute('Select * from Users where user_id=?',(r,))
     res=cur.fetchall()
-    if len(res)>0:
-        Place_sensor_lb.pack_forget()
-        Body_frame.pack(side=TOP, pady=30, fill='x')
+    if len(res)>0:                                      #User is successfully verified.
+        Place_sensor_lb.pack_forget()                   #Hide the pop up notification.
+        Body_frame.pack(side=TOP, pady=30, fill='x')    #place the Body_frame.
 
         if True:
             tkMessageBox.showinfo('Info',"Place you finger on Heart Scanner.... /nand press ok...")
@@ -148,10 +154,10 @@ def body_code():
             Heart_rate.config(text='Heart-rate : '+str(HRM_data[0]))
             Sp02.config(text='Sp02 : '+str(HRM_data[1]))
             show_values_of_sensors()
-    else:
-	Place_sensor_lb.pack_forget()
-	Body_frame.pack_forget()
-	main_frame.pack(pady=30)
+    else:                                               #Verification failed.
+	Place_sensor_lb.pack_forget()                       #Hide the pop up notification. 
+	Body_frame.pack_forget()                            #Hide the Body_frame.
+	main_frame.pack(pady=30)                            #Put the main_frame back in place.
 
 def show_values_of_sensors():
 
@@ -160,9 +166,9 @@ def show_values_of_sensors():
     global after_v
     Temp_value=get_temp()
     Scale_value=Scale.get_scale(Btserial_Scale, 5.0)
-    Temp.config(text='Temp : '+str(Temp_value) + ' C')
-    Weight.config(text='Weight : '+str(Scale_value) + ' Kg')
-    after_v=window.after(1000, show_values_of_sensors)
+    Temp.config(text='Temp : '+str(Temp_value) + ' C')          #Update Temperature value.
+    Weight.config(text='Weight : '+str(Scale_value) + ' Kg')    #Update Weight value.
+    after_v = window.after(1000, show_values_of_sensors)        #Each second call "show_values_of_sensors" again.
     print(after_v)
 
 def add_users():
@@ -190,15 +196,13 @@ def add_users():
         cur.execute('select * from users where user_id=?;',(r[1],))
         res=cur.fetchall()
         if len(res)>0:
-            #messagebox.showwarning("Failed:", 'User Id already exists !')
             tkMessageBox.showwarning("Failed:", 'User Id already exists !')
         else:
             if r[1]>=0:
-                #User_id.insert(0,r[1])
                 from datetime import datetime
                 today = datetime.now().strftime('%Y-%m-%d')
                 cur.execute("insert into users (user_id, E_date) Values (?,?);", (r[1], today))
-                tkMessageBox.showinfo("Success", "User Added Successfully user id = "+ str(r[1]))
+                tkMessageBox.showinfo("Success", "User %d Added Successfully!" % (r[1]))
                 con.commit()
             elif r[1]==-1:
                 tkMessageBox.showwarning("Failed:", "Time Out !")
@@ -217,4 +221,4 @@ def Del_all_user():
         con.commit();
         tkMessageBox.showinfo('info','Successfully deleted remaining users = '+ str(cnt_user))
 
-window.mainloop()
+window.mainloop() #execute App.

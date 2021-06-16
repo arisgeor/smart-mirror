@@ -201,7 +201,7 @@ def AddUser():
             return ACK_TIMEOUT, -11
         if r == ACK_SUCCESS and g_rx_buf[4] == ACK_SUCCESS:
 	    print('success')
-            return ACK_SUCCESS, user_id
+            return ACK_SUCCESS, user_id                 #this way we can get the user_id from the AddUser function too. 
             
         else:
             print('Fial')
@@ -246,13 +246,13 @@ def VerifyUser():
     if r == ACK_TIMEOUT:
         return ACK_TIMEOUT
     if r == ACK_SUCCESS and IsMasterUser(g_rx_buf[4]) == TRUE:
-        return g_rx_buf[3]-1 ###########################################################################################
+        return g_rx_buf[3]-1            #The part I changed. I subtract 1 to keep the same "user_id" aquired from AddUser function.
     elif g_rx_buf[4] == ACK_NO_USER:
         return ACK_NO_USER
     elif g_rx_buf[4] == ACK_TIMEOUT:
         return ACK_TIMEOUT
     else:
-        return ACK_GO_OUT   # The center of the fingerprint is out of alignment with sensor
+        return ACK_GO_OUT               # The center of the fingerprint is out of alignment with sensor
 
         
 #***************************************************************************
@@ -275,8 +275,8 @@ def Analysis_PC_Command(command):
     elif command == "CMD3" and Finger_SleepFlag != 1:
         print ("Waiting Finger......Please try to place the center of the fingerprint flat to sensor !")
         r = VerifyUser()
-        if r in range(GetUserCount()): ###############################################################################
-            print ("User with id:%d recognised succesfully!" % (r)) ############################################################
+        if r in range(GetUserCount()):                              #The part I changed.
+            print ("User with id:%d recognised succesfully!" % (r)) #
         elif r == ACK_NO_USER:
             print ("Failed: This fingerprint was not found in the library !")
         elif r == ACK_TIMEOUT:

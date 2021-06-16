@@ -1,6 +1,6 @@
 from heartrate_monitor import HeartRateMonitor
-import time
 import argparse
+
 def heart_sensor():
     parser = argparse.ArgumentParser(description="Read and print data from MAX30102")
     parser.add_argument("-r", "--raw", action="store_true",
@@ -14,7 +14,7 @@ def heart_sensor():
     hrm1=hrm.run_sensor()
     print(hrm1)
     return hrm1
-#heart_sensor()
+    
 '''
 try:
     time.sleep(args.time)
