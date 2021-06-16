@@ -1,12 +1,9 @@
-from Tkinter import *
-import tkMessageBox
-#from tkinter import messagebox
+from Tkinter import *       #python2 
+import tkMessageBox         #python2 
 import sqlite3 as sql
 import test_fing
-import random
 import test_scale as Scale
 from mlx90614.get_temp import get_temp
-#from max30102_fd.heart_main import heart_sensor
 from max30102_fd.heart_main import heart_sensor as HRM
 con=sql.connect('finger_users.db')
 cur=con.cursor()
@@ -15,7 +12,6 @@ cur.execute("Create Table IF NOT EXISTS Users (User_id number primary key, E_Dat
 def toggle_window(event):
     window.attributes("-fullscreen", False)
     window.geometry("1224x650+50+0")
-
 
 bgcolor = 'Black'
 bg_color1 = 'Black'
@@ -42,7 +38,9 @@ def back():
 
 
 def menu_bar(window_name):
-    ######## bar menu
+    
+    ''' Menu Bar of the Application '''
+
     my_menu = Menu(window_name)
     window_name.config(menu=my_menu)
     window_menu = Menu(my_menu)
@@ -55,11 +53,10 @@ def menu_bar(window_name):
     window_menu.add_separator()
     window_menu.add_command(label="Exit", command=lambda: window.quit())
 
-
-################
-
-######## Header function ############
 def Header_part(window_name, Title, Heading):
+
+    ''' Header function of the Application '''
+
     logo_frame = Frame(window_name, bg=bgcolor)
     logo_frame.pack(side=TOP, fill='x')
     logo_text_frame = Frame(logo_frame, bg=bgcolor)
@@ -68,7 +65,7 @@ def Header_part(window_name, Title, Heading):
           fg=text_color).pack(side=TOP, anchor=NW, pady=5)
     Label(logo_text_frame, text=Heading,
           font=(font_name, 16), bg=bgcolor, fg=text_color).pack(side=TOP, pady=2)
-    # Labels
+    #Labels
     from datetime import datetime
     today_date = datetime.now().strftime('%d-%m-%Y (%A)')
     logo_label = Label(logo_frame, text=today_date, bg=bgcolor, fg=text_color, font=(font_name, 28, 'bold', 'italic'))
@@ -76,19 +73,18 @@ def Header_part(window_name, Title, Heading):
     Canvas(window_name, height=10, bg='Red').pack(fill='x')
 
 
-######## footer function ############
-
 def footer(window_name, footer_text):
+
+    ''' Footer function of the Application '''
+
     Label(window_name, text=footer_text, font=(font_name, 12), justify=LEFT, bg=bgcolor, fg=text_color).pack(
         side=BOTTOM, anchor=NE, padx=30)
     Canvas(window_name, height=10, bg='Blue').pack(side=BOTTOM, fill='x', pady=5)
 
 
-#######################
-
-##################################
-########## Main Window #########
-#################################
+#*********************************************************************************
+#********************************** Main Window **********************************
+#*********************************************************************************
 
 menu_bar(window)
 Header_part(window, home_page_title, home_page_heading)
@@ -145,31 +141,22 @@ def body_code():
     if len(res)>0:
         Place_sensor_lb.pack_forget()
         Body_frame.pack(side=TOP, pady=30, fill='x')
-        #HRM_data=HRM.run_sensor()
-        #HRM.start_sensor()
 
-        #if len(HRM_data)>0:
         if True:
-            tkMessageBox.showinfo('Info',"Place you finger on heart scanner.... /nand press ok...")
+            tkMessageBox.showinfo('Info',"Place you finger on Heart Scanner.... /nand press ok...")
             HRM_data=HRM()
             Heart_rate.config(text='Heart-rate : '+str(HRM_data[0]))
             Sp02.config(text='Sp02 : '+str(HRM_data[1]))
             show_values_of_sensors()
-            #after_v=window.after(1000, show_values_of_sensors)
-            
-            #Heart_rate.config(text='Heart-rate : '+str(HRM_data[0]))
-            #Sp02.config(text='Sp02 : '+str(HRM_data[1]))
-            #Heart_rate.config(text='Heart-rate : '+str(random.randint(70, 90)))
-            #Sp02.config(text='Sp02 : '+str(random.randint(95,99)))
-    #####################
     else:
 	Place_sensor_lb.pack_forget()
 	Body_frame.pack_forget()
 	main_frame.pack(pady=30)
-    #
-    #
-    # #
+
 def show_values_of_sensors():
+
+    ''' Display the current values of all the Sensors '''
+
     global after_v
     Temp_value=get_temp()
     Scale_value=Scale.get_scale(Btserial_Scale, 5.0)
@@ -177,6 +164,7 @@ def show_values_of_sensors():
     Weight.config(text='Weight : '+str(Scale_value) + ' Kg')
     after_v=window.after(1000, show_values_of_sensors)
     print(after_v)
+
 def add_users():
     '''
     new_window = Toplevel()
@@ -194,7 +182,8 @@ def add_users():
     footer(new_window, 'Contact us | Copyright by your name or company name')
     '''
 
-    response = tkMessageBox.askyesno("Confirmation", "Place the finger on the sensor and after that click on the yes button to continue otherwise no to cancle")
+    response = tkMessageBox.askyesno("Confirmation", "Place the finger on the sensor and click on the yes button to continue")
+
     if response == 1:
         r = test_fing.AddUser()
         print('The id is =>  ', r[1])
@@ -209,19 +198,18 @@ def add_users():
                 from datetime import datetime
                 today = datetime.now().strftime('%Y-%m-%d')
                 cur.execute("insert into users (user_id, E_date) Values (?,?);", (r[1], today))
-                #new_window.destroy()
                 tkMessageBox.showinfo("Success", "User Added Successfully user id = "+ str(r[1]))
-                #messagebox.showinfo("Success", "User Added Successfully user id = "+ str(r[1]))
                 con.commit()
             elif r[1]==-1:
                 tkMessageBox.showwarning("Failed:", "Time Out !")
-                #messagebox.showwarning("Failed:", "Time Out !")
             elif r[1]==-2:
-                #messagebox.showerror("Error:", "Please try to place the center of the fingerprint flat to sensor, or this fingerprint already exists !")
                 tkMessageBox.showerror("Error:", "Please try to place the center of the fingerprint flat to sensor, or this fingerprint already exists !")
+
 def Del_all_user():
-    response = tkMessageBox.askyesno("Warning",
-                                   "This will erase all the User id's do you want to continue...")
+
+    ''' Delets all the Users from the Application's database, as well as the Fingerprint sensor's '''
+
+    response = tkMessageBox.askyesno("Warning", "This will erase all the User id's do you want to continue...")
     if response==1:
         test_fing.ClearAllUser()
         cnt_user=test_fing.GetUserCount()
