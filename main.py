@@ -124,6 +124,8 @@ User_id_lb = Label(User_frame, text='User Id: ????', font=(font_name, 20, 'bold'
 User_id_lb.pack(side=TOP, pady=10)
 Button(User_frame, text='Home', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
        command=lambda: back()).pack(side=TOP, pady=10)
+Button(User_frame, text='Test Again', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
+       command=lambda: back()).pack(side=TOP, pady=10)
 
 # Inside Text_frame:
 Label(Text_frame, text='Current Biometrics:', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor,
@@ -184,7 +186,7 @@ def show_values_of_sensors():
 
     global after_v
     try:
-	Btserial_Scale = Scale.connect_scale()  # Connect the scale
+	    Btserial_Scale = Scale.connect_scale()  # Connect the scale
         Temp_value = get_temp()
         Scale_value = Scale.get_scale(Btserial_Scale, 5.0)  # Get scale Value and set weigth Threshhold.
         Temp.config(text='Temp : ' + str(Temp_value) + ' C')  # Update Temperature value.
