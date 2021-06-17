@@ -42,12 +42,12 @@ def back():
     window.after_cancel(after_v)
 
 #### test again
-def Test_again():
+def Test_again(u_id):
     tkMessageBox.showinfo('Info', "Place you finger on Heart Scanner.... \nand press ok...")
     HRM_data = HRM()
     Heart_rate.config(text='Heart-rate : ' + str(HRM_data[0]))
     Sp02.config(text='Sp02 : ' + str(HRM_data[1]))
-    cur.execute('update users set heart_rate=?, sp02=? where user_id=?',(HRM_data[0], HRM_data[1], r[1]))
+    cur.execute('update users set heart_rate=?, sp02=? where user_id=?',(HRM_data[0], HRM_data[1], u_id))
     con.commit()
     print('data save successfully... !')
 
@@ -134,7 +134,7 @@ User_id_lb.pack(side=TOP, pady=10)
 Button(User_frame, text='Home', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
        command=lambda: back()).pack(side=TOP, pady=10)
 Button(User_frame, text='Test Again', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
-       command=lambda: Test_again()).pack(side=TOP, pady=10)
+       command=lambda: Test_again(user_id)).pack(side=TOP, pady=10)
 
 # Inside Text_frame:
 Label(Text_frame, text='Current Biometrics:', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor,
@@ -172,7 +172,7 @@ def body_code():
         Body_frame.pack(side=TOP, pady=30, fill='x')  # place the Body_frame.
 
         if True:
-            Test_again()
+            Test_again(user_id)
             show_values_of_sensors()
     else:
         Place_sensor_lb.pack_forget()  # Hide the pop up notification.
