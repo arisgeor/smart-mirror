@@ -32,9 +32,9 @@ def back():
     global after_v
     main_frame.pack(pady=30)
     print(after_v)
-    window.after_cancel(after_v)
     print('Cancel')
     Body_frame.pack_forget()
+    window.after_cancel(after_v)
 
 
 def menu_bar(window_name):
@@ -115,7 +115,7 @@ Text_frame = Frame(Body_frame, bg=bgcolor)      #Text_frame is created within Bo
 Text_frame.pack(side=RIGHT, padx=100)
 
 #Inside User_frame:
-User_id_lb=Label(User_frame, text='User Id: User_1', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor,
+User_id_lb=Label(User_frame, text='User Id: ????', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor,
       fg=text_color)
 User_id_lb.pack(side=TOP, pady=10)
 Button(User_frame, text='Home', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
@@ -132,7 +132,10 @@ Temp = Label(Text_frame, text='Temp : 00 C', font=(font_name, 20), justify=LEFT,
 Temp.pack(side=TOP, pady=10)
 Weight = Label(Text_frame, text='Weight : 00 Kg', font=(font_name, 20), justify=LEFT, bg=bgcolor, fg=text_color)
 Weight.pack(side=TOP, pady=10)
-Btserial_Scale=Scale.connect_scale()                    #Connect the scale. 
+try:
+    Btserial_Scale=Scale.connect_scale()                    #Connect the scale. 
+except ValueError as e:
+    tkMessageBox.showerror('Error:', e)
 
 def body_code():
 
@@ -145,11 +148,12 @@ def body_code():
     cur.execute('Select * from Users where user_id=?',(r,))
     res=cur.fetchall()
     if len(res)>0:                                      #User is successfully verified.
-        Place_sensor_lb.pack_forget()                   #Hide the pop up notification.
+        Place_sensor_lb.pack_forget()
+        User_id_lb.config(text='User Id = '+str(r))                   #Hide the pop up notification.
         Body_frame.pack(side=TOP, pady=30, fill='x')    #place the Body_frame.
 
         if True:
-            tkMessageBox.showinfo('Info',"Place you finger on Heart Scanner.... /nand press ok...")
+            tkMessageBox.showinfo('Info',"Place you finger on Heart Scanner.... \nand press ok...")
             HRM_data=HRM()
             Heart_rate.config(text='Heart-rate : '+str(HRM_data[0]))
             Sp02.config(text='Sp02 : '+str(HRM_data[1]))
@@ -164,12 +168,15 @@ def show_values_of_sensors():
     ''' Display the current values of all the Sensors '''
 
     global after_v
-    Temp_value=get_temp()
-    Scale_value=Scale.get_scale(Btserial_Scale, 5.0)            #Get scale Value and set weigth Threshhold.
-    Temp.config(text='Temp : '+str(Temp_value) + ' C')          #Update Temperature value.
-    Weight.config(text='Weight : '+str(Scale_value) + ' Kg')    #Update Weight value.
-    after_v = window.after(1000, show_values_of_sensors)        #Each second call "show_values_of_sensors" again.
-    print(after_v)
+    try:
+	Temp_value=get_temp()
+	Scale_value=Scale.get_scale(Btserial_Scale, 5.0)            #Get scale Value and set weigth Threshhold.
+	Temp.config(text='Temp : '+str(Temp_value) + ' C')          #Update Temperature value.
+	Weight.config(text='Weight : '+str(Scale_value) + ' Kg')    #Update Weight value.
+	after_v = window.after(1000, show_values_of_sensors)        #Each second call "show_values_of_sensors" again.
+    except ValueError as err:
+	tkMessagebox.showerror('Error', err)
+    
 
 def add_users():
     '''
