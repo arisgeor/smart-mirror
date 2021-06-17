@@ -186,7 +186,7 @@ def show_values_of_sensors():
 
     global after_v
     try:
-	    Btserial_Scale = Scale.connect_scale()  # Connect the scale
+	Btserial_Scale = Scale.connect_scale()  # Connect the scale
         Temp_value = get_temp()
         Scale_value = Scale.get_scale(Btserial_Scale, 5.0)  # Get scale Value and set weigth Threshhold.
         Temp.config(text='Temp : ' + str(Temp_value) + ' C')  # Update Temperature value.
