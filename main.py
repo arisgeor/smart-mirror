@@ -9,7 +9,7 @@ from max3010x.heart_main import heart_sensor as HRM
 con = sql.connect('finger_users.db')
 cur = con.cursor()
 cur.execute(
-    "Create Table IF NOT EXISTS Users (User_id number primary key, E_Date Date, heart_rate number, sp02, number);");
+    "Create Table IF NOT EXISTS Users (User_id number primary key, E_Date Date, heart_rate number, sp02, number, temp number, weight number);");
 
 
 def toggle_window(event):
@@ -30,7 +30,7 @@ window.bind('<Escape>', toggle_window)  # Use the Escape Button to exit Fullscre
 home_page_title = "Smart-Mirror"
 home_page_heading = "Biometric Measuring Device"
 
-global after_v
+global after_v, user_id
 
 
 def back():
@@ -41,6 +41,15 @@ def back():
     Body_frame.pack_forget()
     window.after_cancel(after_v)
 
+#### test again
+def Test_again():
+    tkMessageBox.showinfo('Info', "Place you finger on Heart Scanner.... \nand press ok...")
+    HRM_data = HRM()
+    Heart_rate.config(text='Heart-rate : ' + str(HRM_data[0]))
+    Sp02.config(text='Sp02 : ' + str(HRM_data[1]))
+    cur.execute('update users set heart_rate=?, sp02=? where user_id=?',(HRM_data[0], HRM_data[1], r[1]))
+    con.commit()
+    print('data save successfully... !')
 
 def menu_bar(window_name):
     ''' Menu Bar of the Application (Top Left)'''
@@ -125,7 +134,7 @@ User_id_lb.pack(side=TOP, pady=10)
 Button(User_frame, text='Home', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
        command=lambda: back()).pack(side=TOP, pady=10)
 Button(User_frame, text='Test Again', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
-       command=lambda: back()).pack(side=TOP, pady=10)
+       command=lambda: Test_again()).pack(side=TOP, pady=10)
 
 # Inside Text_frame:
 Label(Text_frame, text='Current Biometrics:', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor,
@@ -145,6 +154,7 @@ except ValueError as e:
 
 
 def body_code():
+    global user_id
     ''' App Screen After User Clicks the "Log In" Button '''
 
     main_frame.pack_forget()  # Hide the "Home Screen" and pop up the message below.
@@ -153,6 +163,7 @@ def body_code():
     #Place_sensor_lb.pack()
     r = test_fing.VerifyUser()
     print(r)
+    user_id=r[1]
     cur.execute('Select * from Users where user_id=?', (r[1],))
     res = cur.fetchall()
     if r[1] >= 0:  # User is successfully verified.
@@ -161,13 +172,7 @@ def body_code():
         Body_frame.pack(side=TOP, pady=30, fill='x')  # place the Body_frame.
 
         if True:
-            tkMessageBox.showinfo('Info', "Place you finger on Heart Scanner.... \nand press ok...")
-            HRM_data = HRM()
-            Heart_rate.config(text='Heart-rate : ' + str(HRM_data[0]))
-            Sp02.config(text='Sp02 : ' + str(HRM_data[1]))
-            cur.execute('update users set heart_rate=?, sp02=? where user_id=?',(HRM_data[0], HRM_data[1], r[1]))
-            con.commit()
-            print('data save successfully... !')
+            Test_again()
             show_values_of_sensors()
     else:
         Place_sensor_lb.pack_forget()  # Hide the pop up notification.
@@ -184,13 +189,16 @@ def body_code():
 def show_values_of_sensors():
     ''' Display the current values of all the Sensors '''
 
-    global after_v
+    global after_v, user_id
     try:
 	Btserial_Scale = Scale.connect_scale()  # Connect the scale
         Temp_value = get_temp()
         Scale_value = Scale.get_scale(Btserial_Scale, 5.0)  # Get scale Value and set weigth Threshhold.
         Temp.config(text='Temp : ' + str(Temp_value) + ' C')  # Update Temperature value.
         Weight.config(text='Weight : ' + str(Scale_value) + ' Kg')  # Update Weight value.
+        cur.execute("update users set temp=?, weight=? where user_id=?",(Temp_value, Scale_value, user_id))
+        con.commit()
+        print("data saved.................")
         after_v = window.after(1000, show_values_of_sensors)  # Each second call "show_values_of_sensors" again.
     except ValueError as err:
         tkMessagebox.showerror('Error', err)
