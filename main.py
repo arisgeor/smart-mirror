@@ -148,7 +148,7 @@ def body_code():
     main_frame.pack_forget()  # Hide the "Home Screen" and pop up the message below.
     Place_sensor_lb = Label(window, text='Place your finger on the sensor.....', bg=bgcolor, fg=text_color,
                             font=(font_name, 45))
-    Place_sensor_lb.pack()
+    #Place_sensor_lb.pack()
     r = test_fing.VerifyUser()
     print(r)
     cur.execute('Select * from Users where user_id=?', (r[1],))
@@ -168,6 +168,9 @@ def body_code():
             print('data save successfully... !')
             show_values_of_sensors()
     else:
+        Place_sensor_lb.pack_forget()  # Hide the pop up notification.
+        Body_frame.pack_forget()  # Hide the Body_frame.
+        main_frame.pack(pady=30)  # Put the main_frame back in place.
         # Verification failed.
         if r[1] == -1:
             tkMessageBox.showwarning('Failed', "Time Out... !")
@@ -175,16 +178,13 @@ def body_code():
             tkMessageBox.showwarning('Failed', "No User Found... !")
         elif r[1] == -2:
             tkMessageBox.showerror("Failed:", "Please try to place the center of the fingerprint flat to sensor !")
-        Place_sensor_lb.pack_forget()  # Hide the pop up notification.
-        Body_frame.pack_forget()  # Hide the Body_frame.
-        main_frame.pack(pady=30)  # Put the main_frame back in place.
-
 
 def show_values_of_sensors():
     ''' Display the current values of all the Sensors '''
 
     global after_v
     try:
+	Btserial_Scale = Scale.connect_scale()  # Connect the scale
         Temp_value = get_temp()
         Scale_value = Scale.get_scale(Btserial_Scale, 5.0)  # Get scale Value and set weigth Threshhold.
         Temp.config(text='Temp : ' + str(Temp_value) + ' C')  # Update Temperature value.
