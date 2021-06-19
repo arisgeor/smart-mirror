@@ -50,6 +50,7 @@ def back():
     con.commit()
 #### test again
 def Test_again(u_id):
+    global values
     values=[]
     tkMessageBox.showinfo('Info', "Place you finger on Heart Scanner.... \nand press ok...")
     HRM_data = HRM()
