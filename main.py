@@ -12,7 +12,7 @@ cur.execute(
     "Create Table IF NOT EXISTS Users (User_id number primary key, E_Date Date);");
 
 cur.execute(
-    "Create Table IF NOT EXISTS User_data (User_id number, E_Date Date, heart_rate number, sp02, number, temp number, weight number);");
+    "Create Table IF NOT EXISTS User_data (User_id number, E_Date Date, heart_rate number, sp02 number, temp number, weight number);");
 
 
 
@@ -44,7 +44,7 @@ def back():
     print('Cancel')
     Body_frame.pack_forget()
     window.after_cancel(after_v)
-    print(values[0],values[1],values[-2],values[-1])
+    print(str(values[0]),'Date',str(values[1]),str(values[2]),str(values[-2]),str(values[-1]))
     cur_date=datetime.now().strftime('%y-%m-%d %H:%M:%S')
     cur.execute("insert into User_data (user_id,E_date,Heart_rate,sp02,temp,weight) values (?,?,?,?,?,?)",(values[0],cur_date,values[1],values[2], values[-2], values[-1]))
     con.commit()
@@ -61,6 +61,7 @@ def Test_again(u_id):
     values.append(u_id)
     values.append(HRM_data[0])
     values.append(HRM_data[1])
+    print(values)
 def menu_bar(window_name):
     ''' Menu Bar of the Application (Top Left)'''
 
