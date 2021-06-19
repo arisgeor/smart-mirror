@@ -5,11 +5,15 @@ import test_fing
 import test_scale as Scale
 from mlx90614.get_temp import get_temp
 from max3010x.heart_main import heart_sensor as HRM
-
+from datetime import datetime
 con = sql.connect('finger_users.db')
 cur = con.cursor()
 cur.execute(
-    "Create Table IF NOT EXISTS Users (User_id number primary key, E_Date Date, heart_rate number, sp02, number, temp number, weight number);");
+    "Create Table IF NOT EXISTS Users (User_id number primary key, E_Date Date);");
+
+cur.execute(
+    "Create Table IF NOT EXISTS User_data (User_id number, E_Date Date, heart_rate number, sp02, number, temp number, weight number);");
+
 
 
 def toggle_window(event):
@@ -30,8 +34,8 @@ window.bind('<Escape>', toggle_window)  # Use the Escape Button to exit Fullscre
 home_page_title = "Smart-Mirror"
 home_page_heading = "Biometric Measuring Device"
 
-global after_v, user_id
-
+global after_v, user_id, values
+values=[]
 
 def back():
     global after_v
@@ -40,17 +44,23 @@ def back():
     print('Cancel')
     Body_frame.pack_forget()
     window.after_cancel(after_v)
-
+    print(values[0],values[1],values[-2],values[-1])
+    cur_date=datetime.now().strftime('%y-%m-%d %H:%M:%S')
+    cur.execute("insert into User_data values (?,?,?,?,?,?)",(values[0],cur_date,values[1],values[2], values[-2], values[-1]))
+    con.commit()
 #### test again
 def Test_again(u_id):
+    values=[]
     tkMessageBox.showinfo('Info', "Place you finger on Heart Scanner.... \nand press ok...")
     HRM_data = HRM()
     Heart_rate.config(text='Heart-rate : ' + str(HRM_data[0]))
     Sp02.config(text='Sp02 : ' + str(HRM_data[1]))
-    cur.execute('update users set heart_rate=?, sp02=? where user_id=?',(HRM_data[0], HRM_data[1], u_id))
-    con.commit()
-    print('data save successfully... !')
-
+    #cur.execute('update users set heart_rate=?, sp02=? where user_id=?',(HRM_data[0], HRM_data[1], u_id))
+    #con.commit()
+    #print('data save successfully... !')
+    values.append(u_id)
+    values.append(HRM_data[0])
+    values.append(HRM_data[1])
 def menu_bar(window_name):
     ''' Menu Bar of the Application (Top Left)'''
 
@@ -80,7 +90,6 @@ def Header_part(window_name, Title, Heading):
     Label(logo_text_frame, text=Heading,
           font=(font_name, 16), bg=bgcolor, fg=text_color).pack(side=TOP, pady=2)
     # Labels
-    from datetime import datetime
     today_date = datetime.now().strftime('%d-%m-%Y (%A)')
     logo_label = Label(logo_frame, text=today_date, bg=bgcolor, fg=text_color, font=(font_name, 28, 'bold', 'italic'))
     logo_label.pack(side=RIGHT, anchor=NE, padx=5)
@@ -95,9 +104,9 @@ def footer(window_name, footer_text):
     Canvas(window_name, height=2, bg='Blue').pack(side=BOTTOM, fill='x', pady=5)
 
 
-# *********************************************************************************
-# ********************************** Main Window **********************************
-# *********************************************************************************
+# ***************************
+# ************ Main Window ************
+# ***************************
 
 menu_bar(window)
 Header_part(window, home_page_title, home_page_heading)
@@ -164,8 +173,8 @@ def body_code():
     r = test_fing.VerifyUser()
     print(r)
     user_id=r[1]
-    cur.execute('Select * from Users where user_id=?', (r[1],))
-    res = cur.fetchall()
+    #cur.execute('Select * from Users where user_id=?', (r[1],))
+    #res = cur.fetchall()
     if r[1] >= 0:  # User is successfully verified.
         Place_sensor_lb.pack_forget()
         User_id_lb.config(text='User Id = ' + str(r[1]))  # Hide the pop up notification.
@@ -189,17 +198,19 @@ def body_code():
 def show_values_of_sensors():
     ''' Display the current values of all the Sensors '''
 
-    global after_v, user_id
+    global after_v, user_id, values
     try:
 	Btserial_Scale = Scale.connect_scale()  # Connect the scale
         Temp_value = get_temp()
         Scale_value = Scale.get_scale(Btserial_Scale, 5.0)  # Get scale Value and set weigth Threshhold.
         Temp.config(text='Temp : ' + str(Temp_value) + ' C')  # Update Temperature value.
         Weight.config(text='Weight : ' + str(Scale_value) + ' Kg')  # Update Weight value.
-        cur.execute("update users set temp=?, weight=? where user_id=?",(Temp_value, Scale_value, user_id))
-        con.commit()
+        #cur.execute("update users set temp=?, weight=? where user_id=?",(Temp_value, Scale_value, user_id))
+        #con.commit()
         print("data saved.................")
         after_v = window.after(1000, show_values_of_sensors)  # Each second call "show_values_of_sensors" again.
+        values.append(Temp_value)
+        values.append(Scale_value)
     except ValueError as err:
         tkMessagebox.showerror('Error', err)
 
