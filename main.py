@@ -46,7 +46,7 @@ def back():
     window.after_cancel(after_v)
     print(values[0],values[1],values[-2],values[-1])
     cur_date=datetime.now().strftime('%y-%m-%d %H:%M:%S')
-    cur.execute("insert into User_data values (?,?,?,?,?,?)",(values[0],cur_date,values[1],values[2], values[-2], values[-1]))
+    cur.execute("insert into User_data (user_id,E_date,Heart_rate,sp02,temp,weight) values (?,?,?,?,?,?)",(values[0],cur_date,values[1],values[2], values[-2], values[-1]))
     con.commit()
 #### test again
 def Test_again(u_id):
