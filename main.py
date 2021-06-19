@@ -28,6 +28,7 @@ font_name = 'Time New Roman'  # font name
 
 window = Tk()  # Window variable that holds the App.
 window.title("Title")  # Title
+window.attributes("-fullscreen", True)
 window.config(background=bgcolor)  # Applying background color in window.
 window.bind('<Escape>', toggle_window)  # Use the Escape Button to exit Fullscreen Mode.
 
@@ -48,20 +49,22 @@ def back():
     cur_date=datetime.now().strftime('%y-%m-%d %H:%M:%S')
     cur.execute("insert into User_data (user_id,E_date,Heart_rate,sp02,temp,weight) values (?,?,?,?,?,?)",(values[0],cur_date,values[1],values[2], values[-2], values[-1]))
     con.commit()
+    print('data saved into DB Successfully...')
 #### test again
 def Test_again(u_id):
     global values
-    values=[]
     tkMessageBox.showinfo('Info', "Place you finger on Heart Scanner.... \nand press ok...")
+    values=[]
     HRM_data = HRM()
+    Sp02_value=round(HRM_data[1],2)
     Heart_rate.config(text='Heart-rate : ' + str(HRM_data[0]))
-    Sp02.config(text='Sp02 : ' + str(HRM_data[1]))
+    Sp02.config(text='Sp02 : ' + str(Sp02_value))
     #cur.execute('update users set heart_rate=?, sp02=? where user_id=?',(HRM_data[0], HRM_data[1], u_id))
     #con.commit()
     #print('data save successfully... !')
     values.append(u_id)
     values.append(HRM_data[0])
-    values.append(HRM_data[1])
+    values.append(Sp02_value)
     print(values)
 def menu_bar(window_name):
     ''' Menu Bar of the Application (Top Left)'''
@@ -205,6 +208,8 @@ def show_values_of_sensors():
 	Btserial_Scale = Scale.connect_scale()  # Connect the scale
         Temp_value = get_temp()
         Scale_value = Scale.get_scale(Btserial_Scale, 5.0)  # Get scale Value and set weigth Threshhold.
+        Temp_value=round(Temp_value,2)
+        Scale_value= round(float(Scale_value),2)
         Temp.config(text='Temp : ' + str(Temp_value) + ' C')  # Update Temperature value.
         Weight.config(text='Weight : ' + str(Scale_value) + ' Kg')  # Update Weight value.
         #cur.execute("update users set temp=?, weight=? where user_id=?",(Temp_value, Scale_value, user_id))
