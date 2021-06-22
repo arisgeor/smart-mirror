@@ -238,7 +238,7 @@ def IsMasterUser(user_id):
 
 #***************************************************************************
 # @brief    Fingerprint matching
-#***************************************************************************/        
+#*************************************************************************** 
 def VerifyUser():
     global g_rx_buf
     command_buf = [CMD_MATCH, 0, 0, 0, 0]
@@ -246,7 +246,7 @@ def VerifyUser():
     if r == ACK_TIMEOUT:
         return ACK_TIMEOUT, -1
     if r == ACK_SUCCESS and IsMasterUser(g_rx_buf[4]) == TRUE:
-        return ACK_SUCCESS, g_rx_buf[3]-1            #The part I changed. I subtract 1 to keep the same "user_id" aquired from AddUser function.
+        return ACK_SUCCESS, g_rx_buf[3]-1 #The part I changed. I subtract 1 to keep the same "user_id" aquired from AddUser function.
     elif g_rx_buf[4] == ACK_NO_USER:
         return ACK_NO_USER, -3
     elif g_rx_buf[4] == ACK_TIMEOUT:
