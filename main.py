@@ -6,6 +6,7 @@ import test_scale as Scale
 from mlx90614.get_temp import get_temp
 from max3010x.heart_main import heart_sensor as HRM
 from datetime import datetime
+import get_data as gd
 con = sql.connect('finger_users.db')            # Creates Database 
 cur = con.cursor()
 cur.execute(
@@ -165,6 +166,8 @@ Button(User_frame, text='Home', font=(font_name, 12, 'bold'), width=15, bg='gray
        command=lambda: home()).pack(side=TOP, pady=10)
 Button(User_frame, text='Test Again', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
        command=lambda: Test_again(user_id)).pack(side=TOP, pady=10)
+Button(User_frame, text='User Data', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
+       command=lambda: gd.user_data(user_id)).pack(side=TOP, pady=10)
 
 # Inside Text_frame:
 Label(Text_frame, text='Current Biometrics:', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor,
@@ -225,7 +228,7 @@ def show_values_of_sensors():
         Temp_value = get_temp()
         Scale_value = Scale.get_scale(Btserial_Scale, 5.0)  # Get scale Value and set weigth Threshhold.
         Temp_value=round(Temp_value,2)
-        Scale_value= round(float(Scale_value),2)
+        #Scale_value= round(float(Scale_value),2))
         Temp.config(text='Temp : ' + str(Temp_value) + ' C')  # Update Temperature value.
         Weight.config(text='Weight : ' + str(Scale_value) + ' Kg')  # Update Weight value.
         #cur.execute("update users set temp=?, weight=? where user_id=?",(Temp_value, Scale_value, user_id))
