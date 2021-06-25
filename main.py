@@ -279,6 +279,7 @@ def Del_all_user():
         test_fing.ClearAllUser()
         cnt_user = test_fing.GetUserCount()
         cur.execute('Delete from users;')
+        cur.execute('Delete from User_data;')
         con.commit();
         tkMessageBox.showinfo('info', 'Successfully deleted remaining users = ' + str(cnt_user))
 
