@@ -12,7 +12,8 @@ def user_data(user_id):
     res = cur.fetchall()
     if len(res)>0:
         for i in res:
-            data += 'Date: ' + res[i][1] + ', Heart rate: ' + res[i][2] + ', SpO2: ' + res[i][3] + ', Temp: ' + res[i][4] + ', Weight: ' + res[i][5] + '/n'
-    	messagebox.showinfo("User " + user_id + " Data", data)
+            data += 'Date: ' + str(i[1]) + ', Heart rate: ' + str(i[2]) + ', SpO2: ' + str(i[3]) + ', Temp: ' + str(i[4]) + ', Weight: ' + str(i[5]) + '/n'
+            print data
+    	messagebox.showinfo("User " + str(user_id) + " Data", data)
     else:
-        messagebox.showinfo("User " + user_id + " Data", "No Data Found...... ")
+        messagebox.showinfo("User " + str(user_id) + " Data", "No Data Found...... ")
