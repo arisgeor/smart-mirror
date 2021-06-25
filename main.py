@@ -87,8 +87,8 @@ def menu_bar(window_name):
     my_menu.add_cascade(label="Window", menu=window_menu)
     window_menu.add_command(label="Maximize", command=lambda: window.attributes('-fullscreen', True))
     window_menu.add_separator()
-    window_menu.add_command(label="Press Esc Key to Minimize",
-                            command=lambda: tkMessageBox.showinfo('Info', "Press Esc Key to Minimize")) ###########
+    window_menu.add_command(label="Minimize",
+                            command=lambda:window.attributes('-fullscreen', False))
     window_menu.add_separator()
     window_menu.add_command(label="Back", command=lambda: home())
     window_menu.add_separator()
@@ -162,11 +162,11 @@ Text_frame.pack(side=RIGHT, padx=100)
 User_id_lb = Label(User_frame, text='User Id: ????', font=(font_name, 20, 'bold', 'italic'), justify=LEFT, bg=bgcolor,
                    fg=text_color)
 User_id_lb.pack(side=TOP, pady=10)
-Button(User_frame, text='Home', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
+Button(User_frame, text='Home', font=(font_name, 12, 'bold'), width=15, bg='black', fg=text_color, bd=3,
        command=lambda: home()).pack(side=TOP, pady=10)
-Button(User_frame, text='Test Again', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
+Button(User_frame, text='Test Again', font=(font_name, 12, 'bold'), width=15, bg='black', fg=text_color, bd=3,
        command=lambda: Test_again(user_id)).pack(side=TOP, pady=10)
-Button(User_frame, text='User Data', font=(font_name, 12, 'bold'), width=15, bg='gray', fg=text_color, bd=3,
+Button(User_frame, text='User Data', font=(font_name, 12, 'bold'), width=15, bg='black', fg=text_color, bd=3,
        command=lambda: gd.user_data(user_id)).pack(side=TOP, pady=10)
 
 # Inside Text_frame:
